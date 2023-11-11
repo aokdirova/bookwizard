@@ -3,7 +3,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "./ui/accordion";
 import { FC } from "react";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
