@@ -22,7 +22,6 @@ const Chat: FC = () => {
             </AccordionTrigger>
             <AccordionContent>
               <div className='flex flex-col h-80'>
-                messages
                 <ChatInput className='px-4' />
               </div>
             </AccordionContent>
