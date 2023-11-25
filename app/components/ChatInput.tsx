@@ -1,27 +1,58 @@
 "use client";
+import { useMutation } from "@tanstack/react-query";
 import { cn } from "../lib/utils";
 import { FC, HTMLAttributes, useState } from "react";
-import TextareaAutosize from "react-textarea-autosize";
+import { nanoid } from "nanoid";
+import { Message } from "../lib/validators/message";
 
 interface ChatInputProps extends HTMLAttributes<HTMLDivElement> {}
 
 const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
-  const [input, setInput] = useState<string>('')
+  const [input, setInput] = useState<string>("");
+
+  const { mutate: sendMessage, isPending } = useMutation({
+    mutationFn: async (message: Message) => {
+      const response = await fetch("/api/message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: message }),
+      });
+      return response.body;
+    },
+  });
 
   return (
-    <div {...props} className={cn("border-t border-zinc-300", className)}>
-      <div className='relative mt-4 flex-1 overflow-hidden rounded-lg border-none outline-none'>
-        <TextareaAutosize
-          rows={2}
-          maxRows={4}
-          value={input}
-          onChange={(e)=>setInput(e.target.value)}
-          autoFocus
-          placeholder='Write a message...'
-          className='peer disabled:opacity-50 pr-14 resize-none block w-full bg-zinc-100 py-1.5 text-gray-900 focus:ring-5 text-sm sm:leading-6'
-        />
+    <>
+      <div {...props} className={cn("border-t border-zinc-300", className)}>
+        <div className="relative mt-4 flex flex-row overflow-hidden rounded-lg border-none outline-none">
+          <textarea
+            rows={1}
+            value={input}
+            onChange={(e) => {
+              setInput(e.target.value);
+            }}
+            autoFocus
+            placeholder="Write a message..."
+            className="focus:ring-5 peer block w-full resize-none bg-zinc-100 py-1.5  text-sm text-gray-900 sm:leading-6"
+          />
+          <button
+            className="ml-3 rounded border border-zinc-300"
+            type="submit"
+            onClick={(e) => {
+              e.preventDefault();
+              const message: Message = {
+                id: nanoid(),
+                text: input,
+                isUserMessage: true,
+              };
+              sendMessage(message);
+            }}
+          >
+            Send
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
