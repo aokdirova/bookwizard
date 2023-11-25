@@ -15,9 +15,12 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
       const response = await fetch("/api/message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: message }),
+        body: JSON.stringify({ messages: [message] }),
       });
       return response.body;
+    },
+    onSuccess: () => {
+      console.log("success");
     },
   });
 

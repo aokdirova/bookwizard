@@ -1,5 +1,9 @@
 import { chatbotPrompt } from "../../helpers/constants/chatbot-prompt";
-import { ChatGPTMessage } from "../../lib/openai-stream";
+import {
+  ChatGPTMessage,
+  OpenAIStream,
+  OpenAIStreamPayload,
+} from "../../lib/openai-stream";
 import { MessageArraySchema } from "../../lib/validators/message";
 
 export async function POST(req: Request) {
@@ -17,7 +21,7 @@ export async function POST(req: Request) {
     content: chatbotPrompt,
   });
 
-  const payload = {
+  const payload: OpenAIStreamPayload = {
     model: "gpt-3.5-turbo",
     messages: outboundMessages,
     temperature: 0.4,
